@@ -4,18 +4,18 @@ export default function Footer() {
       <div className="wrap">
         <div className="ftr__grid">
           <div>
-            <h4>КлиматГлобал</h4>
+            <h3>КлиматГлобал</h3>
             <p>ООО «КлиматГлобал»<br />Минск, Домашевский переулок, 11А</p>
           </div>
           <div>
-            <h4>Телефоны</h4>
+            <h3>Телефоны</h3>
             <p>
               <a href="tel:+375296185321">+375 29 618-53-21</a><br />
               <a href="tel:+375296183321">+375 29 618-33-21</a>
             </p>
           </div>
           <div>
-            <h4>Работы</h4>
+            <h3>Работы</h3>
             <p>
               <a href="#raboty">Обслуживание</a><br />
               <a href="#raboty">Ремонт</a><br />
@@ -23,7 +23,7 @@ export default function Footer() {
             </p>
           </div>
           <div>
-            <h4>Для кого</h4>
+            <h3>Для кого</h3>
             <p>
               <a href="#usloviya">Квартиры и дома</a><br />
               <a href="#usloviya">Организации</a><br />

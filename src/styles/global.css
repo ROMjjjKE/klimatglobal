@@ -11,9 +11,9 @@
   --air-3: #cbdadc;
   --ink: #0d2b33;
   --ink-2: #35565c;
-  --ink-3: #5e7b80;
+  --ink-3: #4b666b;
   --teal: #146c6b;
-  --teal-2: #2e8e86;
+  --teal-2: #3fa79b;
   --line: rgba(13, 43, 51, 0.15);
   --line-ink: rgba(233, 240, 242, 0.18);
 
@@ -322,7 +322,7 @@ section[id] { scroll-margin-top: 96px; }
 /* ============ футер ============ */
 .ftr { background: var(--ink); color: rgba(233, 240, 242, 0.7); padding-block: clamp(28px, 4vw, 52px); border-top: 1px solid var(--line-ink); }
 .ftr__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
-.ftr h4 { color: var(--air); font-family: var(--f-text); font-size: var(--fs-12); letter-spacing: 0.13em; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
+.ftr h3 { color: var(--air); font-family: var(--f-text); font-size: var(--fs-12); letter-spacing: 0.13em; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
 .ftr p, .ftr a { font-size: var(--fs-14); line-height: 1.6; }
 .ftr a:hover { color: var(--teal-2); }
 .ftr__legal { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line-ink); font-size: var(--fs-12); line-height: 1.6; color: rgba(233, 240, 242, 0.45); max-width: 90ch; }
