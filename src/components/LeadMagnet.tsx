@@ -114,16 +114,18 @@ export default function LeadMagnet() {
   return (
     <section className="section lead" id="polza">
       <div className="wrap">
-        <div className="cols shead">
-          <div className="shead__num micro">03 / опрос</div>
-          <h2 className="shead__title reveal">Опрос: что происходит с вашим кондиционером</h2>
-          <p className="shead__note body-s reveal">
-            Четыре вопроса — и вы получаете разбор своей ситуации: вероятная причина, что будем
-            делать и сколько это стоит. Без звонка и без обязательств.
-          </p>
+        <div className="quizHead">
+          <div className="micro">03 / опрос</div>
+          <div className="quizHead__row">
+            <h2 className="quizHead__t">Опрос: что происходит с вашим кондиционером</h2>
+            <p className="quizHead__n">
+              Четыре вопроса — и вы получаете разбор своей ситуации: вероятная причина, что будем
+              делать и сколько это стоит. Без звонка и без обязательств.
+            </p>
+          </div>
         </div>
 
-        <div className="quiz reveal">
+        <div className="quiz">
           <div className="quiz__main">
             <div className="quiz__head">
               <span className="quiz__count">
