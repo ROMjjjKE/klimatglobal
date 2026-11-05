@@ -80,7 +80,12 @@ export default function LeadMagnet() {
     setA((s) => ({ ...s, [key]: v }));
     if (step < total - 1) window.setTimeout(() => setStep((s) => Math.min(s + 1, total)), 140);
   };
-  const canNext = !!a[STEPS[step].key as Key];
+  const cur = STEPS[Math.min(step, total - 1)];
+  const canNext = !!a[cur.key as Key];
+  const next = () => {
+    if (step >= total - 1) setReady(true);
+    else setStep((v) => v + 1);
+  };
   const pct = Math.round(((ready ? total : step) / total) * 100);
 
   const sym = a.sym ? SYMPTOM[a.sym] : null;
@@ -146,16 +151,16 @@ export default function LeadMagnet() {
 
             {!ready ? (
               <>
-                <h3 className="quiz__q">{STEPS[step].q}</h3>
-                <p className="quiz__hint">{STEPS[step].hint}</p>
+                <h3 className="quiz__q">{cur.q}</h3>
+                <p className="quiz__hint">{cur.hint}</p>
                 <div className="quiz__opts">
-                  {STEPS[step].opts.map((o) => (
+                  {cur.opts.map((o) => (
                     <button
                       type="button"
                       key={o}
-                      className={`quiz__opt${a[STEPS[step].key] === o ? ' is-on' : ''}`}
-                      aria-pressed={a[STEPS[step].key] === o}
-                      onClick={() => pick(STEPS[step].key, o)}
+                      className={`quiz__opt${a[cur.key] === o ? ' is-on' : ''}`}
+                      aria-pressed={a[cur.key] === o}
+                      onClick={() => pick(cur.key, o)}
                     >
                       {o}
                     </button>
@@ -173,7 +178,7 @@ export default function LeadMagnet() {
                   <button
                     type="button"
                     className="btn quiz__next"
-                    onClick={() => setStep((s) => s + 1)}
+                    onClick={next}
                     disabled={!canNext}
                   >
                     {step === total - 1 ? 'Показать разбор' : 'Дальше'}
