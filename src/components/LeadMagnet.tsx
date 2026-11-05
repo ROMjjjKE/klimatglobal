@@ -34,6 +34,7 @@ export default function LeadMagnet() {
   const [busy, setBusy] = useState(false);
 
   const pick = (k: typeof MAGNETS[number]['key']) => {
+    if (k === 'checklist') window.open('/klimatglobal/materialy/chek-list-12-voprosov.html', '_blank', 'noopener');
     setWant(k);
     const el = document.getElementById('lead-form');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
