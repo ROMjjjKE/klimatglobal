@@ -36,6 +36,21 @@ export function useReveal(key: string) {
       n.dataset.stagger = String(i);
       io.observe(n);
     });
-    return () => io.disconnect();
+
+    // страховка: через 2,5 с показываем всё, что ещё скрыто —
+    // лучше без анимации, чем пустые блоки при медленной сети или сбое наблюдателя
+    const safety = window.setTimeout(() => {
+      nodes.forEach((n) => {
+        if (!n.style.opacity || n.style.opacity === '0') {
+          n.style.opacity = '1';
+          n.style.transform = 'none';
+        }
+      });
+    }, 2500);
+
+    return () => {
+      window.clearTimeout(safety);
+      io.disconnect();
+    };
   }, [key]);
 }

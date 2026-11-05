@@ -77,7 +77,7 @@ export default function LeadMagnet() {
           <div className="shead__num micro">03 / до звонка</div>
           <h2 className="shead__title reveal">Заберите пользу до того, как позвоните</h2>
           <p className="shead__note body-s reveal">
-            Три вещи, которые отдаём сразу и без обязательств. Так вы проверите нас до того, как доверите кондиционер.
+            Три вещи отдаём сразу и без обязательств — проверьте нас до звонка.
           </p>
         </div>
 
