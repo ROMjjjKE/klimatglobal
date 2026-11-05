@@ -416,3 +416,16 @@ section[id] { scroll-margin-top: 96px; }
 .hero__facts li::before { content: ''; position: absolute; left: 0; top: .62em; width: 7px; height: 1px; background: var(--teal-2); }
 .hero__facts b { color: var(--ink); font-weight: 700; }
 @media (max-width: 640px) { .hero__facts { grid-template-columns: 1fr; } }
+
+/* --- адаптив лид-магнитов и вопросов --- */
+@media (max-width: 1000px) {
+  .lead__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lead__formWrap { grid-template-columns: 1fr; gap: 22px; }
+}
+@media (max-width: 680px) {
+  .lead__grid { grid-template-columns: 1fr; }
+  .leadf__row { grid-template-columns: 1fr; }
+  .leadCard h3 { font-size: 1.25rem; }
+  .qa summary { font-size: var(--fs-17); }
+  .lead__formWrap { padding: 20px 16px; }
+}
