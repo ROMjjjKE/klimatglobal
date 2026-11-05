@@ -112,7 +112,7 @@ export default function LeadMagnet() {
   };
 
   return (
-    <section className="section lead" id="polza">
+    <section className="section quizsec" id="polza">
       <div className="wrap">
         <div className="quizHead">
           <div className="micro">03 / опрос</div>

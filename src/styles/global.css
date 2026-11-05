@@ -341,7 +341,7 @@ section[id] { scroll-margin-top: 96px; }
 }
 
 /* --- лид-магниты --- */
-.lead { background: var(--air-2); }
+.quizsec { background: var(--air-2); }
 .lead__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-top: clamp(24px, 3vw, 44px); }
 .leadCard {
   display: flex; flex-direction: column; gap: 12px;
@@ -489,7 +489,7 @@ section[id] { scroll-margin-top: 96px; }
 }
 
 /* --- секция опроса: простая сетка без анимаций и колоночных хитростей --- */
-.lead .wrap { width: 100%; }
+.quizsec .wrap { width: 100%; }
 .quizHead { display: grid; gap: 10px; }
 .quizHead__row { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: clamp(16px, 2.4vw, 48px); align-items: end; }
 .quizHead__t { font-family: var(--f-display); font-size: var(--fs-48); line-height: 1.08; color: var(--ink); max-width: 22ch; }
