@@ -43,7 +43,7 @@ export default function Contact({ mode }: { mode: Mode }) {
     <section className="ask section--flush" id="zayavka">
       <div className="wrap" style={{ paddingBlock: 'var(--sect)' }}>
         <div className="cols shead" style={{ marginBottom: 'clamp(20px, 3vw, 40px)' }}>
-          <div className="shead__num micro">08 / заявка</div>
+          <div className="shead__num micro">10 / заявка</div>
           <h2 className="shead__title reveal">Опишите, что с системой — назовём цену до выезда</h2>
           <p className="shead__note reveal" style={{ color: 'rgba(233,240,242,0.7)' }}>
             Двух слов хватит: «не охлаждает», «капает», «шумит», «не включается». Назовём вероятную

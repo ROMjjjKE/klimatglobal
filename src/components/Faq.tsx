@@ -30,7 +30,7 @@ export default function Faq() {
     <section className="section" id="voprosy">
       <div className="wrap">
         <div className="cols shead">
-          <div className="shead__num micro">06 / вопросы</div>
+          <div className="shead__num micro">08 / вопросы</div>
           <h2 className="shead__title reveal">Что спрашивают до заказа</h2>
           <p className="shead__note body-s reveal">
             Шесть вопросов, после которых обычно уже нечего уточнять. Остальное — по телефону.

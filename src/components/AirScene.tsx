@@ -113,7 +113,7 @@ export default function AirScene({ mode }: { mode: Mode }) {
     <section className={`air ${pin ? 'air--pin' : 'air--manual'}`} id="trakt">
       <div className="wrap">
         <div className="cols air__head">
-          <div className="shead__num micro">03 / тракт</div>
+          <div className="shead__num micro">05 / тракт</div>
           <h2 className="shead__title reveal">Что происходит с воздухом</h2>
           <p className="shead__note body-s reveal">
             Один и тот же путь от решётки до комнаты. {mode === 'biz' ? 'На объекте добавляются зоны и балансировка.' : 'В квартире он короче, но проверять надо каждое звено.'}

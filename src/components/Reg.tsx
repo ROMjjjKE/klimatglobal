@@ -13,7 +13,7 @@ export default function Reg({ mode }: { mode: Mode }) {
     <section className="section" id="reglament">
       <div className="wrap reg">
         <div>
-          <div className="micro" style={{ marginBottom: 14 }}>04 / регламент</div>
+          <div className="micro" style={{ marginBottom: 14 }}>06 / регламент</div>
           <h2 className="reveal" style={{ fontSize: 'var(--fs-34)', marginBottom: 16 }}>Что входит в обслуживание — и почему это дешевле ремонта</h2>
           <p className="body-s">
             Пять пунктов на каждом выезде. Если пункт не нужен — вычёркиваем его из акта и из суммы.

@@ -21,7 +21,7 @@ export default function Terms({ mode, setMode }: { mode: Mode; setMode: (m: Mode
     <section className="section" id="usloviya">
       <div className="wrap">
         <div className="cols shead">
-          <div className="shead__num micro">05 / условия</div>
+          <div className="shead__num micro">07 / условия</div>
           <h2 className="shead__title reveal">
             {mode === 'private' ? 'Как работаем с квартирами и домами' : 'Как работаем с организациями'}
           </h2>

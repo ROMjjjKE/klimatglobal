@@ -3,7 +3,7 @@ export default function Address() {
     <section className="section" id="adres">
       <div className="wrap addr">
         <div>
-          <div className="micro" style={{ marginBottom: 14 }}>07 / где мы</div>
+          <div className="micro" style={{ marginBottom: 14 }}>09 / где мы</div>
           <h2 className="reveal" style={{ fontSize: 'var(--fs-34)', marginBottom: 16 }}>Минск, Домашевский переулок, 11А</h2>
           <p className="body-s">
             Склад запчастей и мастерская на месте: часть работ делаем в цеху, часть — на выезде.

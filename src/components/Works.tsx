@@ -21,7 +21,7 @@ export default function Works() {
     <section className="section" id="raboty">
       <div className="wrap">
         <div className="cols shead">
-          <div className="shead__num micro">03 / работы</div>
+          <div className="shead__num micro">04 / работы</div>
           <h2 className="shead__title reveal">Три повода позвонить — и что вы получаете</h2>
           <p className="shead__note body-s reveal">
             Не смешиваем ТО, ремонт и проект в одну строку сметы: у них разные деньги, сроки и ответственность за результат.
