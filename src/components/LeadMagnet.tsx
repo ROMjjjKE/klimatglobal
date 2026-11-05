@@ -1,174 +1,276 @@
 import { useState } from 'react';
 
-const MAGNETS = [
-  {
-    key: 'checklist',
-    tag: 'PDF в WhatsApp',
-    title: 'Чек-лист: 12 вопросов монтажнику до договора',
-    text: 'Что спросить про трассу, дренаж, крепёж и гарантию — чтобы не переделывать за свой счёт после первого сезона.',
-    pick: 'Получить чек-лист',
+/**
+ * Лид-магнит = интерактивный опрос (квиз).
+ * Человек отвечает на 4 вопроса, получает персональный разбор ситуации
+ * и отправляет заявку в WhatsApp уже с контекстом -- менеджеру не нужно
+ * ничего переспрашивать.
+ */
+
+type Key = 'obj' | 'qty' | 'sym' | 'when';
+
+const OBJ = ['Квартира', 'Дом', 'Офис', 'Магазин', 'Кафе / ресторан', 'Производство'];
+const QTY = ['1 кондиционер', '2–3', '4–6', 'Больше шести'];
+const SYM = [
+  'Не охлаждает',
+  'Течёт или капает',
+  'Шумит, гудит',
+  'Неприятный запах',
+  'Работает — нужно ТО',
+  'Не знаю, что с ним',
+];
+const WHEN = ['Сегодня–завтра', 'На этой неделе', 'В течение месяца', 'Пока узнаю цену'];
+
+const STEPS = [
+  { key: 'obj' as Key, q: 'Что за объект?', hint: 'От этого зависит, какой мастер приедет', opts: OBJ },
+  { key: 'qty' as Key, q: 'Сколько кондиционеров?', hint: 'Считаем все внутренние блоки', opts: QTY },
+  { key: 'sym' as Key, q: 'Что происходит?', hint: 'Опишите симптом, как он есть', opts: SYM },
+  { key: 'when' as Key, q: 'Когда нужно?', hint: 'Честный ответ не обязателен к исполнению', opts: WHEN },
+];
+
+const SYMPTOM: Record<string, { cause: string; work: string }> = {
+  'Не охлаждает': {
+    cause:
+      'Чаще всего это утечка фреона или забитый конденсор. Реже — компрессор или автоматика: пока приборы не покажут, не гадаем.',
+    work: 'Диагностика с манометрами, поиск утечки, дозаправка или ремонт по факту.',
   },
-  {
-    key: 'photo',
-    tag: 'Смета за 15 минут',
-    title: 'Смета на ТО по фото оборудования',
-    text: 'Сфотографируйте шильдик и внутренний блок — вернёмся с суммой на сезон. Без выезда и без «приедем и посмотрим».',
-    pick: 'Отправить фото',
+  'Течёт или капает': {
+    cause:
+      'Почти всегда засорился дренаж или сбился уклон трассы. Вторая причина — перемерзание испарителя из-за грязного фильтра.',
+    work: 'Чистка дренажа и поддона, проверка уклона, промывка испарителя.',
   },
-  {
-    key: 'season',
-    tag: 'Напоминание',
-    title: 'Напоминание перед сезоном',
-    text: 'Напишем за две недели до жары. В июле очередь длиннее, а обслуживание — то же самое и по той же цене.',
-    pick: 'Напомнить о ТО',
+  'Шумит, гудит': {
+    cause:
+      'Вибрация крепления, износ подшипника вентилятора или резонанс корпуса. Видно и слышно на месте за пару минут.',
+    work: 'Проверка крепежа, вентилятора, подтяжка и замена виброопор.',
   },
-] as const;
+  'Неприятный запах': {
+    cause:
+      'Биоплёнка на испарителе и в поддоне — результат влаги и пыли. Чисткой наружного блока это не лечится.',
+    work: 'Дезинфекция испарителя, чистка фильтров и поддона, обработка антибактериальным составом.',
+  },
+  'Работает — нужно ТО': {
+    cause: 'Хороший сценарий: профилактика дешевле ремонта и меньше внезапных поломок в жару.',
+    work: 'Пять пунктов регламента, лишнее вычёркиваем из акта и из суммы.',
+  },
+  'Не знаю, что с ним': {
+    cause: 'Тогда начинаем с диагностики: смотрим систему и говорим причину, а не «нужно менять всё».',
+    work: 'Диагностика с проверкой режимов, давлений и электрики.',
+  },
+};
+
+const URGENT: Record<string, string> = {
+  'Сегодня–завтра': 'Ставим в приоритет: аварийные заявки едут первыми.',
+  'На этой неделе': 'Подберём слот на этой неделе и подтвердим время звонком.',
+  'В течение месяца': 'Запишем на удобную дату: в жару очередь длиннее, лучше заранее.',
+  'Пока узнаю цену': 'Ничего не впариваем: назовём цифру, вы решите сами.',
+};
 
 export default function LeadMagnet() {
+  const [step, setStep] = useState(0);
+  const [a, setA] = useState<Record<string, string>>({});
   const [name, setName] = useState('');
   const [tel, setTel] = useState('');
-  const [want, setWant] = useState<typeof MAGNETS[number]['key']>('checklist');
-  const [honey, setHoney] = useState('');
   const [bad, setBad] = useState<Record<string, boolean>>({});
+  const [ready, setReady] = useState(false);
   const [sent, setSent] = useState(false);
-  const [busy, setBusy] = useState(false);
 
-  const pick = (k: typeof MAGNETS[number]['key']) => {
-    if (k === 'checklist') window.open('/klimatglobal/materialy/chek-list-12-voprosov.html', '_blank', 'noopener');
-    setWant(k);
-    const el = document.getElementById('lead-form');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const total = STEPS.length;
+  const pick = (key: Key, v: string) => {
+    setA((s) => ({ ...s, [key]: v }));
+    if (step < total - 1) window.setTimeout(() => setStep((s) => Math.min(s + 1, total)), 140);
   };
+  const canNext = !!a[STEPS[step].key as Key];
+  const pct = Math.round(((ready ? total : step) / total) * 100);
+
+  const sym = a.sym ? SYMPTOM[a.sym] : null;
+  const isBiz = ['Офис', 'Магазин', 'Кафе / ресторан', 'Производство'].includes(a.obj);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (honey) return;
+    if (!ready) {
+      setReady(true);
+      return;
+    }
     const errs: Record<string, boolean> = {};
     if (name.trim().length < 2) errs.name = true;
     if (tel.replace(/\D/g, '').length < 9) errs.tel = true;
     setBad(errs);
     if (Object.keys(errs).length) return;
 
-    setBusy(true);
-    const titles: Record<string, string> = {
-      checklist: 'Чек-лист: 12 вопросов монтажнику до договора',
-      photo: 'Смета на ТО по фото оборудования',
-      season: 'Напоминание перед сезоном',
-    };
-    const text = [
-      'Заявка с сайта КлиматГлобал',
-      `Материал: ${titles[want]}`,
+    const lines = [
+      'Заявка из опроса на сайте КлиматГлобал',
+      `Объект: ${a.obj || '—'}`,
+      `Кондиционеров: ${a.qty || '—'}`,
+      `Симптом: ${a.sym || '—'}`,
+      `Когда: ${a.when || '—'}`,
       `Имя: ${name}`,
       `Телефон: ${tel}`,
-      want === 'photo' ? 'Готов прислать фото блоков и шильдика в этот чат.' : '',
-    ].filter(Boolean).join('\n');
-
-    window.setTimeout(() => {
-      window.open(`https://wa.me/375296185321?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
-      setBusy(false);
-      setSent(true);
-    }, 350);
+    ].join('\n');
+    window.open(`https://wa.me/375296185321?text=${encodeURIComponent(lines)}`, '_blank', 'noopener');
+    setSent(true);
   };
 
   return (
     <section className="section lead" id="polza">
       <div className="wrap">
         <div className="cols shead">
-          <div className="shead__num micro">03 / до звонка</div>
-          <h2 className="shead__title reveal">Заберите пользу до того, как позвоните</h2>
+          <div className="shead__num micro">03 / опрос</div>
+          <h2 className="shead__title reveal">Опрос: что происходит с вашим кондиционером</h2>
           <p className="shead__note body-s reveal">
-            Три вещи отдаём сразу и без обязательств — проверьте нас до звонка.
+            Четыре вопроса — и вы получаете разбор своей ситуации: вероятная причина, что будем
+            делать и сколько это стоит. Без звонка и без обязательств.
           </p>
         </div>
 
-        <div className="lead__grid">
-          {MAGNETS.map((m) => (
-            <article className="leadCard reveal" key={m.key}>
-              <span className="leadCard__tag">{m.tag}</span>
-              <h3>{m.title}</h3>
-              <p>{m.text}</p>
-              <button type="button" className="link-teal" onClick={() => pick(m.key)}>
-                {m.pick} →
-              </button>
-            </article>
-          ))}
-        </div>
+        <div className="quiz reveal">
+          <div className="quiz__main">
+            <div className="quiz__head">
+              <span className="quiz__count">
+                {ready ? 'Готово' : `Вопрос ${step + 1} из ${total}`}
+              </span>
+              <span className="quiz__pct">{pct}%</span>
+            </div>
+            <div
+              className="quiz__bar"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={pct}
+              aria-label="Прогресс опроса"
+            >
+              <i style={{ width: `${pct}%` }} />
+            </div>
 
-        <div className="lead__formWrap reveal" id="lead-form">
-          <div className="lead__formText">
-            <h3>Куда прислать материал</h3>
-            <p>
-              Один звонок не станет поводом для звонков каждый месяц: присылаем выбранный материал и
-              отвечаем на вопросы. Дальше — только если сами напишете.
-            </p>
-            <ul>
-              <li>Чек-лист — сразу в WhatsApp, в день заявки</li>
-              <li>Смета по фото — в тот же день, если фото пришли до 18:00</li>
-              <li>Напоминание — за две недели до сезона, не раньше</li>
-            </ul>
+            {!ready ? (
+              <>
+                <h3 className="quiz__q">{STEPS[step].q}</h3>
+                <p className="quiz__hint">{STEPS[step].hint}</p>
+                <div className="quiz__opts">
+                  {STEPS[step].opts.map((o) => (
+                    <button
+                      type="button"
+                      key={o}
+                      className={`quiz__opt${a[STEPS[step].key] === o ? ' is-on' : ''}`}
+                      aria-pressed={a[STEPS[step].key] === o}
+                      onClick={() => pick(STEPS[step].key, o)}
+                    >
+                      {o}
+                    </button>
+                  ))}
+                </div>
+                <div className="quiz__nav">
+                  <button
+                    type="button"
+                    className="quiz__back"
+                    onClick={() => setStep((s) => Math.max(0, s - 1))}
+                    disabled={step === 0}
+                  >
+                    ← Назад
+                  </button>
+                  <button
+                    type="button"
+                    className="btn quiz__next"
+                    onClick={() => setStep((s) => s + 1)}
+                    disabled={!canNext}
+                  >
+                    {step === total - 1 ? 'Показать разбор' : 'Дальше'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <form className="quiz__fin" onSubmit={submit} noValidate>
+                <div className="quiz__verdict">
+                  <span className="quiz__tag">Ваш случай</span>
+                  <p className="quiz__cause">{sym ? sym.cause : 'Разберём на месте.'}</p>
+                  <p className="quiz__work">{sym ? sym.work : ''}</p>
+                  {a.when && <p className="quiz__when">{URGENT[a.when]}</p>}
+                  {isBiz && (
+                    <p className="quiz__when">
+                      Для организации оформим договор, счёт и закрывающие документы — с НДС или без.
+                    </p>
+                  )}
+                </div>
+                {!sent ? (
+                  <>
+                    <div className="leadf__row">
+                      <div className="leadf__field">
+                        <label htmlFor="q-name">Как обращаться</label>
+                        <input
+                          id="q-name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          aria-invalid={!!bad.name}
+                          className={bad.name ? 'bad' : ''}
+                          placeholder="Александр"
+                          autoComplete="name"
+                        />
+                        {bad.name && <span className="leadf__err">Нужно имя</span>}
+                      </div>
+                      <div className="leadf__field">
+                        <label htmlFor="q-tel">Телефон для WhatsApp</label>
+                        <input
+                          id="q-tel"
+                          value={tel}
+                          onChange={(e) => setTel(e.target.value)}
+                          aria-invalid={!!bad.tel}
+                          className={bad.tel ? 'bad' : ''}
+                          placeholder="+375 29 000-00-00"
+                          inputMode="tel"
+                          autoComplete="tel"
+                        />
+                        {bad.tel && <span className="leadf__err">Нужен номер</span>}
+                      </div>
+                    </div>
+                    <button className="btn quiz__next" type="submit">
+                      Получить разбор в WhatsApp →
+                    </button>
+                    <p className="quiz__fine">
+                      Ответы уйдут мастеру готовым сообщением — переспрашивать по телефону не придётся.
+                      Данные не передаём третьим лицам.
+                    </p>
+                  </>
+                ) : (
+                  <p className="quiz__ok">
+                    Открыли WhatsApp с вашими ответами. Если окно не появилось — позвоните:
+                    +375 29 618-53-21.
+                  </p>
+                )}
+                <button
+                  type="button"
+                  className="quiz__reset"
+                  onClick={() => {
+                    setReady(false);
+                    setStep(0);
+                    setSent(false);
+                  }}
+                >
+                  Пройти заново
+                </button>
+              </form>
+            )}
           </div>
 
-          <form className="leadf" onSubmit={submit} noValidate>
-            <input
-              type="text"
-              className="leadf__honey"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              value={honey}
-              onChange={(e) => setHoney(e.target.value)}
-            />
-            <div className="leadf__row">
-              <div className="leadf__field">
-                <label htmlFor="lead-name">Имя</label>
-                <input
-                  id="lead-name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  autoComplete="name"
-                  aria-invalid={!!bad.name}
-                  className={bad.name ? 'bad' : ''}
-                />
-                {bad.name && <span className="leadf__err">Как к вам обращаться</span>}
-              </div>
-              <div className="leadf__field">
-                <label htmlFor="lead-tel">Телефон</label>
-                <input
-                  id="lead-tel"
-                  value={tel}
-                  onChange={(e) => setTel(e.target.value)}
-                  inputMode="tel"
-                  autoComplete="tel"
-                  aria-invalid={!!bad.tel}
-                  className={bad.tel ? 'bad' : ''}
-                />
-                {bad.tel && <span className="leadf__err">Нужен номер для WhatsApp</span>}
-              </div>
-            </div>
-
-            <div className="leadf__field">
-              <label htmlFor="lead-want">Что прислать</label>
-              <select id="lead-want" value={want} onChange={(e) => setWant(e.target.value as typeof want)}>
-                {MAGNETS.map((m) => (
-                  <option key={m.key} value={m.key}>{m.title}</option>
-                ))}
-              </select>
-            </div>
-
-            <button className="btn leadf__btn" type="submit" disabled={busy}>
-              {busy ? 'Готовим сообщение…' : 'Получить в WhatsApp'}
-            </button>
-
-            {sent && (
-              <p className="leadf__ok" role="status">
-                Открыли WhatsApp с готовым сообщением — отправьте его, и материал придёт в ответ.
-              </p>
-            )}
-
-            <p className="leadf__fine">
-              Телефон нужен, чтобы отправить материал в WhatsApp. Никаких рассылок без вашего согласия.
+          <aside className="quiz__aside">
+            <span className="quiz__tag quiz__tag--light">Что вы получите</span>
+            <ul>
+              <li>
+                <b>Причину</b> — что чаще всего даёт такой симптом, без «нужно менять всё»
+              </li>
+              <li>
+                <b>План работ</b> — что именно делает мастер на выезде
+              </li>
+              <li>
+                <b>Чек-лист</b> из 12 вопросов монтажнику —{' '}
+                <a href="/klimatglobal/materialy/chek-list-12-voprosov.html" target="_blank" rel="noopener">
+                  открыть сразу
+                </a>
+              </li>
+            </ul>
+            <p className="quiz__asideNote">
+              Опрос — не продажа в лоб: сначала разбор, потом решение. Если случай не наш, скажем прямо.
             </p>
-          </form>
+          </aside>
         </div>
       </div>
     </section>
