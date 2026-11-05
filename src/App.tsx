@@ -4,6 +4,8 @@ import Hero from './components/Hero';
 import AirScene from './components/AirScene';
 import Works from './components/Works';
 import Reg from './components/Reg';
+import LeadMagnet from './components/LeadMagnet';
+import Faq from './components/Faq';
 import Terms from './components/Terms';
 import Address from './components/Address';
 import Contact from './components/Contact';
@@ -24,10 +26,12 @@ export default function App() {
       <Header mode={mode} setMode={setMode} />
       <main>
         <Hero mode={mode} setMode={setMode} />
+        <LeadMagnet />
         <Works />
         <AirScene mode={mode} />
         <Reg mode={mode} />
         <Terms mode={mode} setMode={setMode} />
+        <Faq />
         <Address />
         <Contact mode={mode} />
       </main>

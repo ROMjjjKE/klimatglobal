@@ -43,10 +43,11 @@ export default function Contact({ mode }: { mode: Mode }) {
     <section className="ask section--flush" id="zayavka">
       <div className="wrap" style={{ paddingBlock: 'var(--sect)' }}>
         <div className="cols shead" style={{ marginBottom: 'clamp(20px, 3vw, 40px)' }}>
-          <div className="shead__num micro">07 / заявка</div>
-          <h2 className="shead__title reveal">Посчитаем стоимость и согласуем выезд</h2>
+          <div className="shead__num micro">08 / заявка</div>
+          <h2 className="shead__title reveal">Опишите, что с системой — назовём цену до выезда</h2>
           <p className="shead__note reveal" style={{ color: 'rgba(233,240,242,0.7)' }}>
-            Позвоните или оставьте заявку: уточним объект, симптомы и удобное время.
+            Двух слов хватит: «не охлаждает», «капает», «шумит», «не включается». Назовём вероятную
+            причину и стоимость, время подтвердим при звонке.
           </p>
         </div>
 
@@ -117,8 +118,9 @@ export default function Contact({ mode }: { mode: Mode }) {
             )}
 
             <p className="ask__fine">
-              Стоимость называем до начала работ и фиксируем в смете. Цены на сайте нет: одна и та же
-              неисправность на бытовом сплите и на канальной системе стоит по-разному.
+              Цену называем до начала работ и фиксируем в смете. Прайса на сайте нет специально:
+              одна и та же неисправность на бытовом сплите и на канальной системе стоит по-разному —
+              называть «в среднем» значит обманывать.
             </p>
           </form>
         </div>

@@ -339,3 +339,72 @@ section[id] { scroll-margin-top: 96px; }
   body { background: #fff; color: #000; }
   .section { padding-block: 24px; break-inside: avoid; }
 }
+
+/* --- лид-магниты --- */
+.lead { background: var(--air-2); }
+.lead__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-top: clamp(24px, 3vw, 44px); }
+.leadCard {
+  display: flex; flex-direction: column; gap: 12px;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  padding: clamp(20px, 2vw, 28px);
+}
+.leadCard__tag {
+  align-self: flex-start; font-family: var(--f-text); font-size: var(--fs-12); font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--teal);
+  background: rgba(63, 167, 155, .12); border-radius: 999px; padding: 5px 11px;
+}
+.leadCard h3 { font-family: var(--f-display); font-size: var(--fs-24); line-height: 1.22; color: var(--ink); }
+.leadCard p { color: var(--ink-2); font-size: var(--fs-17); line-height: 1.5; }
+.leadCard .link-teal { margin-top: auto; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
+
+.lead__formWrap {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px);
+  margin-top: clamp(22px, 3vw, 40px); padding: clamp(20px, 2.4vw, 36px);
+  background: var(--ink); color: var(--air); border-radius: 16px;
+}
+.lead__formText h3 { font-family: var(--f-display); font-size: var(--fs-24); margin-bottom: 10px; }
+.lead__formText p { color: rgba(233,240,242,.72); font-size: var(--fs-17); line-height: 1.55; }
+.lead__formText ul { margin-top: 14px; display: grid; gap: 7px; }
+.lead__formText li { color: rgba(233,240,242,.66); font-size: var(--fs-14); padding-left: 16px; position: relative; }
+.lead__formText li::before { content: ''; position: absolute; left: 0; top: .62em; width: 7px; height: 1px; background: var(--teal-2); }
+
+.leadf { display: grid; gap: 14px; align-content: start; }
+.leadf__honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.leadf__row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.leadf__field { display: flex; flex-direction: column; gap: 7px; }
+.leadf__field label { font-size: var(--fs-12); letter-spacing: .12em; text-transform: uppercase; color: rgba(233,240,242,.6); font-weight: 600; }
+.leadf__field input, .leadf__field select {
+  width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line-ink);
+  padding: 9px 0 10px; color: var(--air); font: inherit; font-size: var(--fs-17); transition: border-color .18s;
+}
+.leadf__field select option { color: var(--ink); }
+.leadf__field input:focus, .leadf__field select:focus { border-bottom-color: var(--teal-2); outline: none; }
+.leadf__field input.bad { border-bottom-color: #e2857c; }
+.leadf__err { font-size: var(--fs-12); color: #f0a49c; }
+.leadf__btn { margin-top: 4px; }
+.leadf__ok { font-size: var(--fs-14); color: var(--teal-2); }
+.leadf__fine { font-size: var(--fs-12); color: rgba(233,240,242,.5); line-height: 1.5; }
+
+/* --- вопросы-возражения --- */
+.qa { margin-top: clamp(22px, 3vw, 40px); border-top: 1px solid var(--line); }
+.qa__item { border-bottom: 1px solid var(--line); }
+.qa__item summary {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; cursor: pointer;
+  list-style: none; padding: clamp(15px, 1.7vw, 21px) 0;
+  font-family: var(--f-display); font-size: var(--fs-19); color: var(--ink);
+}
+.qa__item summary::-webkit-details-marker { display: none; }
+.qa__item summary i { position: relative; width: 15px; height: 15px; flex: none; }
+.qa__item summary i::before, .qa__item summary i::after {
+  content: ''; position: absolute; background: var(--teal); transition: transform .2s;
+}
+.qa__item summary i::before { left: 0; top: 7px; width: 15px; height: 1px; }
+.qa__item summary i::after { left: 7px; top: 0; width: 1px; height: 15px; }
+.qa__item[open] summary i::after { transform: scaleY(0); }
+.qa__item p { padding: 0 0 clamp(16px, 1.9vw, 22px); max-width: 74ch; color: var(--ink-2); font-size: var(--fs-17); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .lead__grid { grid-template-columns: 1fr; }
+  .lead__formWrap { grid-template-columns: 1fr; }
+  .leadf__row { grid-template-columns: 1fr; }
+}
